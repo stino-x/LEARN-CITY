@@ -14,22 +14,21 @@ import { useForm } from 'react-hook-form';
 import { Course } from '@prisma/client';
 import toast from 'react-hot-toast';
 import * as z from "zod"
-import { ComboboxDemo } from '@/components/ui/combobox';
+import { formatPrice } from '@/lib/format';
 
-interface CategoryFormProps {
+interface PriceFormProps {
     // onSubmit: (description: string) => void;
     // initialData: {
     //     description: string
     // };
     initialData: Course
     courseId: string
-    options: {label: string; value: string;}[];
 }
 const formSchema = z.object({
-    categoryId: z.string().min(1),
+    price: z.coerce.number(),
 })
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, options }) => {
+const PriceForm: React.FC<PriceFormProps> = ({ initialData, courseId }) => {
     const [isediting, setisediting] = useState(false);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -43,8 +42,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
         }
     }
 
-    const selectedOption = options.find((option) => option.value === initialData.categoryId)
-
     const toggleEdit = () => setisediting((current) => !current)
 
 
@@ -55,7 +52,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: { categoryId: initialData?.categoryId || "" }
+        defaultValues: { price: initialData?.price || undefined},
     })
 
     const {isSubmitting, isValid} = form.formState;
@@ -66,7 +63,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
     return (
         <div className='mt-6 border p-4 rounded-md bg-slate-100'>
             <div className='font-medium flex justify-between items-center'>
-                Course category
+                Course Price
                 <Button onClick={() => toggleEdit()} variant="ghost">
                 {isediting && (
                     <>Cancel</>
@@ -74,7 +71,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
                 {!isediting && (
                     <>
                     <Pencil className='h-2 w-2 mr-2' />
-                    Edit category
+                    Edit Price
                     </>
                 )}
             </Button>
@@ -82,9 +79,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
             {!isediting && (
                     <p className={cn(
                         "text-sm mt-2",
-                        !initialData.categoryId && "text-slate-500 italic"
+                        !initialData.price && "text-slate-500 italic"
                     )}>
-                    {selectedOption?.label || "No category"}
+                    {initialData.price ? formatPrice(initialData.price) : "No price"}
                     </p>
             )}
              {isediting && (
@@ -92,18 +89,16 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
                         <form className='space-y-4 mt-4' onSubmit={form.handleSubmit(onSubmit)}>
                                 <FormField 
                                 control={form.control}
-                                name='categoryId'
+                                name='price'
                                 render={({field}) => (
                                     <FormItem>
                                         <FormControl>
-                                            {/* <Textarea 
+                                            <Input 
+                                            type="number"
+                                            step="0.01"
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'this course is about...'"
+                                            placeholder="set a price for your course"
                                             {...field}
-                                            /> */}
-                                            <ComboboxDemo 
-                                              options={{...options}}
-                                              {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -129,4 +124,4 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ initialData, courseId, opti
     );
 };
 
-export default CategoryForm;
+export default PriceForm;

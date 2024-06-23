@@ -66,7 +66,7 @@ const CreatePage: React.FC<CreatePageProps> = () => {
                 <h1 className='text-2xl'>Name your Course</h1>
                 <p className='text-sm text-slate-600'>What would you like to name your course, you can optionally change this later</p>
                 <Form {...form}>
-                    <form action="" onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 mt-8'>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 mt-8'>
                         <FormField
                          control={form.control}
                          name="title"

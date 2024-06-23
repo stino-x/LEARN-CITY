@@ -87,7 +87,7 @@ const DescriptionForm: React.FC<DescriptionFormProps> = ({ initialData, courseId
             )}
              {isediting && (
                     <Form {...form}>
-                        <form action="" className='space-y-4 mt-4' onSubmit={form.handleSubmit(onSubmit)}>
+                        <form className='space-y-4 mt-4' onSubmit={form.handleSubmit(onSubmit)}>
                                 <FormField 
                                 control={form.control}
                                 name='description'
