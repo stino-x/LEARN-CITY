@@ -77,7 +77,8 @@ const ChapterIdPage  = async (params: {
                             </h1>
                             <span className='text-sm font-slate-700'>Complete all fields{completionText}</span>
                         </div>
-                        <ChapterActions disabled={!isComplete} courseId={params.courseId} chaperterId={params.chapterId} isPublished={chapter.isPublished}/>
+                        <ChapterActions disabled={!isComplete} courseId={params.courseId} chapterId={params.chapterId} isPublished={chapter.isPublished}/>
+                        
                     </div>
                 </div>
             </div>

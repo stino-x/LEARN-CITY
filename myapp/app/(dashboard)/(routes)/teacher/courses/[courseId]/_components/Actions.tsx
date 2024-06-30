@@ -1,31 +1,33 @@
 'use client'
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import { Button } from '@/components/ui/button';
+import { useConfettiStore } from '@/hooks/use-confetti-store';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
-interface ChapterActionsProps {
-    chapterId: string;
+interface ActionsProps {
+    // chapterId: string;
     courseId: string;
     disabled: boolean;
     isPublished: boolean;
 }
 
-const ChapterActions: React.FC<ChapterActionsProps> = ({ chapterId, isPublished, courseId, disabled }) => {
+const Actions: React.FC<ActionsProps> = ({  isPublished, courseId, disabled }) => {
     const [loading, setLoading] = useState(false);
     const onClick = async () => {
         try {
             setLoading(true)
 
             if (isPublished) {
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`)
-                toast.success('Chapter unpublished!')
+                await axios.patch(`/api/courses/${courseId}/chapters/unpublish`)
+                toast.success('Course unpublished!')
             } else {
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`)
-                toast.success('Chapter published!')
+                await axios.patch(`/api/courses/${courseId}/chapters/publish`)
+                toast.success('Course published!')
+                confetti.onOpen();
             }
 
             router.refresh()
@@ -37,14 +39,15 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({ chapterId, isPublished,
     };
 
     const router = useRouter()
+    const confetti = useConfettiStore()
 
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
-            toast.error('Chapter deleted')
+            await axios.delete(`/api/courses/${courseId}/chapters`)
+            toast.error('Course deleted')
             router.refresh()
-            router.push(`/teacher/courses/${courseId}`)
+            router.push(`/teacher/courses`)
         } catch  {
             toast.error('Something went wrong')
         } finally {
@@ -71,4 +74,4 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({ chapterId, isPublished,
     );
 };
 
-export default ChapterActions;
+export default Actions;

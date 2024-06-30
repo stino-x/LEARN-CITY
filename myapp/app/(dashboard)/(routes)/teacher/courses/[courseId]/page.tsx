@@ -11,6 +11,8 @@ import CategoryForm from './_components/CategoryForm';
 import PriceForm from './_components/PriceForm';
 import AttachmentForm from './_components/AttachmentForm';
 import ChaptersForm from './_components/ChaptersForm';
+import Banner from '@/components/banner';
+import Actions from './_components/Actions';
 
 interface CourseIdProps {
   courseId: string;
@@ -64,8 +66,13 @@ const CourseId: React.FC<CourseIdProps> = async ({ courseId }) => {
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `(${completedFields} / ${totalFields})`;
+  const isComplete = requiredFields.every(Boolean);
 
   return (
+    <>
+    {!course.isPublished && (
+      <Banner label='This course is unpublished . it will not be visible to the students' />
+    )}
     <div className="p-6">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-2">
@@ -74,6 +81,7 @@ const CourseId: React.FC<CourseIdProps> = async ({ courseId }) => {
             Complete All Fields {completionText}
           </span>
         </div>
+        <Actions disabled={!isComplete} courseId={courseId} isPublished={course.isPublished} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
@@ -119,6 +127,7 @@ const CourseId: React.FC<CourseIdProps> = async ({ courseId }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
