@@ -5,13 +5,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 interface SidebarItemProps {
-    title: string;
     icon: LucideIcon;
     label: string;
     href: string;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ title, icon: Icon, label, href }) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({  icon: Icon, label, href }) => {
     const pathname = usePathname()
     const router = useRouter()
 
@@ -32,8 +31,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ title, icon: Icon, label, hre
                     {label}
             </div>
             <div
-            className={cn(' text-slate-500 ',
-                isActive && 'text-sky-700'
+            className={cn(' ml-auto opacity-0 border-sky-700 h-full border-2 transition-all ',
+                isActive && 'opacity-100'
                 )} />
         </button>
     );

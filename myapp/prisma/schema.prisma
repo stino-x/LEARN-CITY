@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Define the Course model
+model Course {
+  id          String       @id @default(uuid())
+  userId      String
+  title       String       @db.Text
+  description String?      @db.Text
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  categoryId  String?
+  imageUrl    String?      @db.Text
+  price       Float?
+  isPublished Boolean      @default(false)
+
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  attachments Attachment[]
+  purchases   Purchase[]
+  chapters    Chapter[]
+
+  @@index([categoryId])
+}
+
+// Define the Attachment model
+model Attachment {
+  id        String    @id @default(uuid())
+  courseId  String
+  name      String
+  url       String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@index([courseId])
+}
+
+// Define the Category model
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  courses   Course[]
+}
+
+// Define the Chapter model
+model Chapter {
+  id           String        @id @default(uuid())
+  courseId     String
+  title        String
+  description  String?       @db.Text
+  videoUrl     String?       @db.Text
+  isPublished  Boolean       @default(false)
+  isFree       Boolean       @default(false)
+  position     Int
+
+  muxData      MuxData?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  userProgress UserProgress[]
+
+  course       Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@index([courseId])
+}
+
+// Define the MuxData model
+model MuxData {
+  id        String    @id @default(uuid())
+  chapterId String    @unique
+  playbackId String?
+  assetId   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  chapter   Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
+
+// Define the UserProgress model
+model UserProgress {
+  id          String    @id @default(uuid())
+  userId      String
+  chapterId   String
+  isCompleted Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  chapter     Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+// Define the Purchase model
+model Purchase {
+  id        String    @id @default(uuid())
+  userId    String
+  courseId  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+// Define the StripeCustomer model
+model StripeCustomer {
+  id                String    @id @default(uuid())
+  userId            String
+  stripeCustomerId  String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+}
