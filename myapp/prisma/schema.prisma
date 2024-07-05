@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -30,6 +31,7 @@ model Course {
   chapters    Chapter[]
 
   @@index([categoryId])
+  @@fulltext([title])
 }
 
 // Define the Attachment model
@@ -110,8 +112,10 @@ model Purchase {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+
   course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  @@index([userId])
+  @@unique([userId, courseId])
+  @@index([courseId])
 }
 
 // Define the StripeCustomer model
