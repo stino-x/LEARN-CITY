@@ -2,6 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const publicRoutes = [
   '/api/webhook',
+  '/api/uploadthing',
   '/sign-in',
   '/sign-up',
   // Add any other public routes here

@@ -38,7 +38,8 @@ const NavbarRoutes: React.FC = () => {
                 </Link>
             ) : null}
             <UserButton 
-            afterSignOutUrl='/'
+            // afterSignOutUrl='/'
+            // forceRedirectUrl= {'/'}
             />
         </div>
        </>
