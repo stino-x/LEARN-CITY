@@ -13,12 +13,12 @@ import toast from 'react-hot-toast';
 import * as z from "zod"
 
 interface TitleFormProps {
-    // onSubmit: (title: string) => void;
     initialData: {
         title: string
     };
     courseId: string
 }
+
 const formSchema = z.object({
     title: z.string().min(1, {
         message: 'title is required'

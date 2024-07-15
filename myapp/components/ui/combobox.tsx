@@ -11,6 +11,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command"
 import {
   Popover,
@@ -18,41 +19,29 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-// const options = [
-//   {
-//     value: "next.js",
-//     label: "Next.js",
-//   },
-//   {
-//     value: "sveltekit",
-//     label: "SvelteKit",
-//   },
-//   {
-//     value: "nuxt.js",
-//     label: "Nuxt.js",
-//   },
-//   {
-//     value: "remix",
-//     label: "Remix",
-//   },
-//   {
-//     value: "astro",
-//     label: "Astro",
-//   },
-// ]
-
 interface Comboboxprops {
-    options: {
-        label: string;
-        value: string;
-    }[];
-    value?: string;
-    onChange: (value: string) => void;
+  options: {
+    label: string;
+    value: string;
+  }[];
+  value?: string;
+  onChange: (value: string) => void;
 }
 
 export const ComboboxDemo = (props: Comboboxprops) => {
-  const {options, value, onChange} = props
+  const { options, value, onChange } = props
   const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    console.log("Value changed:", value);
+  }, [value]);
+
+  console.log("ComboboxDemo options:", options);
+  console.log("ComboboxDemo value:", value);
+
+  if (!options || options.length === 0) {
+    return <div>No categories available</div>;
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -72,6 +61,7 @@ export const ComboboxDemo = (props: Comboboxprops) => {
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Search option..." />
+          <CommandList>
           <CommandEmpty>No option found.</CommandEmpty>
           <CommandGroup>
             {options.map((option) => (
@@ -79,7 +69,7 @@ export const ComboboxDemo = (props: Comboboxprops) => {
                 key={option.value}
                 value={option.value}
                 onSelect={() => {
-                    onChange(option.value === value ? "" : option.value)
+                  onChange(option.value)
                   setOpen(false)
                 }}
               >
@@ -93,6 +83,7 @@ export const ComboboxDemo = (props: Comboboxprops) => {
               </CommandItem>
             ))}
           </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

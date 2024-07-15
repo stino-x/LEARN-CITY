@@ -7,7 +7,7 @@ export default function DashboardLayout({
     children: React.ReactNode
   }) {
     return (
-      <div className='h-full flex items-center justify-center'>
+      <div className='h-full'>
         <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full z-50">
             <NavBar />
         </div>

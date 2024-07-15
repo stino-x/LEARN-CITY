@@ -7,6 +7,8 @@ import VideoPlayer from './_component/VideoPlayer';
 import CourseEnrollButton from './_component/CourseEnrollButton';
 import { Separator } from '@/components/ui/separator';
 import Preview from '@/components/preview';
+import { File } from 'lucide-react';
+import CourseProgressButton from './_component/CourseProgressButton';
 
 interface ChapterIdPageProps {
     chapterId: string;
@@ -60,7 +62,7 @@ const ChapterIdPage = async ({ params }: {params:{ courseId: string; chapterId: 
                         {chapter.title}
                         </h2>
                         {purchase ? (
-                                <div></div>
+                                <CourseProgressButton chapterId={params.chapterId} courseId={params.courseId} nextChapterId={nextChapter?.id} isCompleted={!!userProgress?.isCompleted} />
                         ) : (
                             <CourseEnrollButton courseId={params.courseId} price={course.price!} />
                         )}
@@ -74,9 +76,7 @@ const ChapterIdPage = async ({ params }: {params:{ courseId: string; chapterId: 
                         <Separator />
                         <div className='p-4'>
                             {attachments.map((attachment) => (
-                                <div key={attachment.id}>
-                                    <a href={attachment.url} target='_blank' className='text-primary underline'>{attachment.name}</a>
-                                </div>
+                                    <a className='flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline' key={attachment.id} href={attachment.url} target='_blank'><File /><p className='line-clamp-1'>{attachment.name}</p></a>
                             ))}
                         </div>
                         </>
