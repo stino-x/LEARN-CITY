@@ -29,7 +29,8 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({ chapterId, isPublished,
             }
 
             router.refresh()
-        } catch {
+        } catch(error)  {
+            console.error("Publish/Unpublish Error:", error);
             toast.error('Something went wrong')
         } finally {
             setLoading(false)
@@ -45,7 +46,8 @@ const ChapterActions: React.FC<ChapterActionsProps> = ({ chapterId, isPublished,
             toast.error('Chapter deleted')
             router.refresh()
             router.push(`/teacher/courses/${courseId}`)
-        } catch  {
+        } catch(error)  {
+            console.error("Publish/Unpublish Error:", error);
             toast.error('Something went wrong')
         } finally {
             setLoading(false)
