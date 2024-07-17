@@ -2,7 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import { Chapter } from '@prisma/client';
-import { Pencil, Badge, Grip } from 'lucide-react';
+import { Pencil, Grip } from 'lucide-react';
+import { Badge } from "@/components/ui/badge"
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 

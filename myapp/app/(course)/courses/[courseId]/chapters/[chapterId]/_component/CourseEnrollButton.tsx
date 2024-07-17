@@ -27,7 +27,7 @@ const CourseEnrollButton: React.FC<CourseEnrollButtonProps> = ({ courseId, price
     
     return (
         <Button onClick={onClick} disabled={isLoading} className='w-full md:w-auto' size="sm">
-            Enroll in Course {courseId} - Price: ${price}
+            Enroll  Price: ${price}
         </Button>
     );
 };
