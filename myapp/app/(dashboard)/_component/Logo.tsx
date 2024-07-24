@@ -8,10 +8,10 @@ import React from 'react';
 const Logo = () => {
     return (
         <Image 
-        height={130}
-        width={130}
+        height={180}
+        width={180}
         alt='logo'
-        src='./logo.svg'
+        src='/logo2.png'
         />
     );
 };
