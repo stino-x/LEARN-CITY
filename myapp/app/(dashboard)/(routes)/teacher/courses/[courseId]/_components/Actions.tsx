@@ -22,10 +22,10 @@ const Actions: React.FC<ActionsProps> = ({  isPublished, courseId, disabled }) =
             setLoading(true)
 
             if (isPublished) {
-                await axios.patch(`/api/courses/${courseId}/chapters/unpublish`)
+                await axios.patch(`/api/courses/${courseId}/unpublish`)
                 toast.success('Course unpublished!')
             } else {
-                await axios.patch(`/api/courses/${courseId}/chapters/publish`)
+                await axios.patch(`/api/courses/${courseId}/publish`)
                 toast.success('Course published!')
                 confetti.onOpen();
             }
@@ -44,7 +44,7 @@ const Actions: React.FC<ActionsProps> = ({  isPublished, courseId, disabled }) =
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/courses/${courseId}/chapters`)
+            await axios.delete(`/api/courses/${courseId}`)
             toast.error('Course deleted')
             router.refresh()
             router.push(`/teacher/courses`)

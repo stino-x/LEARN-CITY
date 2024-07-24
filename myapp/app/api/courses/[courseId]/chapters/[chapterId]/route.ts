@@ -90,40 +90,28 @@ export async function DELETE(
     }
 }
 
-export async function PATCH (
-    req: Request, {params}: {params : {courseId: string;  chapterId: string}}
+export async function PATCH(
+    req: Request,
+    { params }: { params: { courseId: string; chapterId: string } }
 ) {
-      try {
+    try {
         const { userId } = auth()
-        const{ isPublished, ...values} = await req.json()
-
+        const { isPublished, ...values } = await req.json()
 
         if (!userId) {
-            return new NextResponse('Unauthorised', {status: 401})
+            return new NextResponse('Unauthorised', { status: 401 })
         }
 
         const courseOwner = await db.course.findUnique({
             where: {
-            id: params.courseId,
-            userId
+                id: params.courseId,
+                userId
             },
         })
 
         if (!courseOwner) {
-            return new NextResponse('Unauthorised', {status: 401})
+            return new NextResponse('Unauthorised', { status: 401 })
         }
-        
-        // const lastChapter = await db.chapter.findFirst({
-        //     where: {
-        //         courseId: params.courseId
-        //     },
-        //     orderBy: {
-        //         position: 'desc'
-        //     }
-        
-        // });
-
-        // const newPosition = lastChapter ? lastChapter.position + 1 : 1;
 
         const chapter = await db.chapter.update({
             where: {
@@ -136,38 +124,60 @@ export async function PATCH (
         })
 
         if (values.videoUrl) {
-            const existingMuxData = await db.muxData.findFirst({
-                where: {
-                    chapterId: params.chapterId,
-                }
-            });
+            try {
+                const asset = await video.assets.create({
+                    input: values.videoUrl,
+                    playback_policy: ["public"],
+                    test: false,
+                });
 
-            if (existingMuxData) {
-                await video.assets.delete(existingMuxData.assetId);
-                await db.muxData.delete({
+                // Check if MuxData already exists for this chapter
+                const existingMuxData = await db.muxData.findUnique({
                     where: {
-                        id: existingMuxData.id
+                        chapterId: params.chapterId,
+                    },
+                });
+
+                if (existingMuxData) {
+                    // If it exists, update it
+                    await db.muxData.update({
+                        where: {
+                            id: existingMuxData.id,
+                        },
+                        data: {
+                            assetId: asset.id,
+                            playbackId: asset.playback_ids?.[0]?.id,
+                        },
+                    });
+
+                    // Try to delete the old Mux asset, but don't throw an error if it fails
+                    try {
+                        await video.assets.delete(existingMuxData.assetId);
+                    } catch (deleteError) {
+                        console.warn("Failed to delete old Mux asset:", deleteError);
+                        // Continue execution even if deletion fails
                     }
-                })
-            }
-
-            const asset = await video.assets.create({
-                input: values.videoUrl,
-                playback_policy: ["public"],
-                test: false,
-            })
-
-            await db.muxData.create({
-                data: {
-                    chapterId: params.chapterId,
-                    assetId: asset.id,
-                    playbackId: asset.playback_ids?.[0]?.id,
+                } else {
+                    // If it doesn't exist, create a new entry
+                    await db.muxData.create({
+                        data: {
+                            chapterId: params.chapterId,
+                            assetId: asset.id,
+                            playbackId: asset.playback_ids?.[0]?.id,
+                        },
+                    });
                 }
-            })
+
+            } catch (error) {
+                console.error("Error handling Mux asset:", error);
+                console.error("Video URL:", values.videoUrl);
+                throw error;
+            }
         }
-        return  NextResponse.json(chapter)
-      } catch (error) {
+
+        return NextResponse.json(chapter)
+    } catch (error) {
         console.log("[COURSES_CHAPTER_ID]", error)
-        return new NextResponse("internal serval error", { status: 500})
-      }
+        return new NextResponse("Internal server error", { status: 500 })
+    }
 }

@@ -1,5 +1,9 @@
 /* stylelint-disable no-missing-end-of-source-newline */
 /* stylelint-disable rule-empty-line-before */
+/* In your globals.css */
+@import 'react-quill/dist/quill.snow.css';
+
+/* Your other global styles */
 /* stylelint-disable at-rule-no-unknown */
 /* stylelint-disable custom-property-empty-line-before */
 /* stylelint-disable scss/at-rule-no-unknown */

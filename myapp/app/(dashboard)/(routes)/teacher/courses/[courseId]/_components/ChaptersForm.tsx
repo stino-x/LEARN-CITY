@@ -26,9 +26,9 @@ interface ChaptersFormProps {
 }
 const formSchema = z.object({
     title: z.string().min(1),
-    description: z.string().min(1, {
-        message: 'description is required'
-    })
+    // description: z.string().min(1, {
+    //     message: 'description is required'
+    // })
 })
 
 const ChaptersForm: React.FC<ChaptersFormProps> = ({ initialData, courseId }) => {
@@ -46,15 +46,17 @@ const ChaptersForm: React.FC<ChaptersFormProps> = ({ initialData, courseId }) =>
     }
 
     const onReorder = async (updateData: {id: string; position: number}[]) => {
+        setisUpdating(true);
         try {
-            setisUpdating(true)
             await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
                 list: updateData
             });
-            toast.success('Chapters reorderd')
-            router.refresh()
+            toast.success('Chapters reordered');
+            router.refresh();
         } catch (error) {
-            toast.error('Something went wrong')
+            toast.error('Something went wrong');
+        } finally {
+            setisUpdating(false); // Ensure this runs whether the request succeeded or failed
         }
     }
 
