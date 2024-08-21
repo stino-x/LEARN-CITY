@@ -1,7 +1,7 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/db"
 import { stripe } from "@/lib/stripe";
-import { currentUser } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { auth, currentUser } from "@clerk/nextjs/server"
+import { NextResponse } from "next/server"
 import type { Stripe } from "stripe";
 
 export async function POST(req: Request, { params }: { params: { courseId: string } }) {
@@ -13,7 +13,14 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
 
         const course = await db.course.findUnique({
             where: { id: params.courseId },
-            select: { isPublished: true, title: true, description: true, imageUrl: true, price: true }
+            select: {
+                id: true,  // Ensure the `id` field is selected
+                title: true,
+                description: true,
+                imageUrl: true,
+                price: true,
+                isPublished: true,
+            }
         });
 
         if (!course?.isPublished) {
