@@ -27,11 +27,13 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
             return new NextResponse('Not Found', { status: 404 });
         }
 
-        // const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/success=1`;
-        // const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/canceled=1`;
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.endsWith('/')
+  ? process.env.NEXT_PUBLIC_APP_URL
+  : `${process.env.NEXT_PUBLIC_APP_URL}/`;
 
-        const successUrl = `https://learn-city.vercel.app/courses/${course.id}/success=1`;
-        const cancelUrl = `https://learn-city.vercel.app/courses/${course.id}/canceled=1`;
+const successUrl = `${baseUrl}courses/${course.id}/success=1`;
+const cancelUrl = `${baseUrl}courses/${course.id}/canceled=1`;
+
 
         // Debugging lines to check the URLs
         console.log("Success URL:", successUrl);
