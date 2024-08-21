@@ -27,6 +27,13 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
             return new NextResponse('Not Found', { status: 404 });
         }
 
+        const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/success=1`;
+        const cancelUrl = `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/canceled=1`;
+
+        // Debugging lines to check the URLs
+        console.log("Success URL:", successUrl);
+        console.log("Cancel URL:", cancelUrl);
+
         const purchase = await db.purchase.findUnique({
             where: {
                 userId_courseId: {
@@ -48,7 +55,7 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
                     product_data: {
                         name: course.title,
                         description: course.description?.toString(),
-                        images: course.imageUrl ? [course.imageUrl] : [],
+                        // images: course.imageUrl ? [course.imageUrl] : [],
                     },
                     unit_amount: Math.round(course.price! * 100),
                 },
@@ -73,6 +80,9 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
             });
         }
 
+        console.log(process.env.NEXT_PUBLIC_APP_URL);
+
+
         const session = await stripe.checkout.sessions.create({
             line_items,
             mode: 'payment',
@@ -80,8 +90,8 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
                 userId: user.id,
                 courseId: course.id,
             },
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/success=1`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/canceled=1`,
+            success_url: successUrl,
+            cancel_url: cancelUrl,
             customer: stripeCustomer.stripeCustomerId,
         });
 
