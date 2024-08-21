@@ -4,28 +4,25 @@ import { auth, currentUser } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import type { Stripe } from "stripe";
 
-export async function POST(req: Request, { params }: { params: { courseId: string } }) {
-    try {
-        const user = await currentUser();
-        if (!user?.id || !user?.emailAddresses?.[0]?.emailAddress) {
-            return new NextResponse('Unauthorized', { status: 401 });
+export async function POST (
+    req: Request, {params}: {params : {courseId: string;}}
+) {
+      try {
+        const user = await currentUser()
+
+
+
+
+        if (!user?.id || !user || !user.emailAddresses?.[0].emailAddress) {
+            return new NextResponse('Unauthorised', {status: 401})
         }
 
         const course = await db.course.findUnique({
-            where: { id: params.courseId },
-            select: {
-                id: true,  // Ensure the `id` field is selected
-                title: true,
-                description: true,
-                imageUrl: true,
-                price: true,
-                isPublished: true,
-            }
-        });
-
-        if (!course?.isPublished) {
-            return new NextResponse('Not Found', { status: 404 });
-        }
+            where: {
+            id: params.courseId,
+            isPublished: true,
+            },
+        })
 
         const purchase = await db.purchase.findUnique({
             where: {
@@ -34,10 +31,15 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
                     userId: user.id
                 }
             }
-        });
+
+        })
 
         if (purchase) {
-            return new NextResponse('Already Purchased', { status: 400 });
+            return new NextResponse('Already Purchased', {status: 400})
+        }
+
+        if (!course) {
+            return new NextResponse('Not Found', {status: 404})
         }
 
         const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
@@ -53,27 +55,33 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
                     unit_amount: Math.round(course.price! * 100),
                 },
             },
-        ];
+        ]
 
         let stripeCustomer = await db.stripeCustomer.findUnique({
-            where: { userId: user.id },
-            select: { stripeCustomerId: true }
-        });
+            where: {
+                // id: user.id,
+                userId: user.id
+            },
+            select: {
+                stripeCustomerId: true,
+            }
+        })
 
         if (!stripeCustomer) {
             const customer = await stripe.customers.create({
-                email: user.emailAddresses[0].emailAddress,
-            });
+                email: user.emailAddresses?.[0].emailAddress,
+            })
 
             stripeCustomer = await db.stripeCustomer.create({
                 data: {
                     userId: user.id,
                     stripeCustomerId: customer.id,
                 }
-            });
+            })
         }
 
         const session = await stripe.checkout.sessions.create({
+            // payment_method_types: ['card'],
             line_items,
             mode: 'payment',
             metadata: {
@@ -83,11 +91,12 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/success=1`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/canceled=1`,
             customer: stripeCustomer.stripeCustomerId,
-        });
+        })
 
-        return NextResponse.json({ url: session.url });
-    } catch (error) {
-        console.error("[COURSE_ID_CHECKOUT]", error);
-        return new NextResponse("Internal Server Error", { status: 500 });
-    }
+
+        return  NextResponse.json({ url: session.url})
+      } catch (error) {
+        console.log("[COURSE_ID_CHECKOUT]", error)
+        return new NextResponse("internal serval error", { status: 500})
+      }
 }
