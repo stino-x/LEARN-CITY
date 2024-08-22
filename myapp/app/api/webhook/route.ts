@@ -12,9 +12,12 @@ export async function POST(
     const signature = headers().get("Stripe-Signature") as string;
 
     let event: Stripe.Event
+    const webhook = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? 'DEFAULT_URL'
     try {
-        event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+        event = stripe.webhooks.constructEvent(body, signature, webhook)
+        console.log('Received event:', event); // Log the event data
     } catch (error: any) {
+        console.error('Webhook Error:', error.message); // Log errors
         return new NextResponse(`Webhook Error: ${error.message}`, {status: 400})
     }
 
