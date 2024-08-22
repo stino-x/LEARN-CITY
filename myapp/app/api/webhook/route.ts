@@ -12,7 +12,7 @@ export async function POST(
     const signature = headers().get("Stripe-Signature") as string;
 
     let event: Stripe.Event
-    const webhook = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? 'DEFAULT_URL'
+    const webhook = process.env.STRIPE_WEBHOOK_SECRET!
     try {
         event = stripe.webhooks.constructEvent(body, signature, webhook)
         console.log('Received event:', event); // Log the event data
