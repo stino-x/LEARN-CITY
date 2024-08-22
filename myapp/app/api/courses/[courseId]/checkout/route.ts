@@ -28,8 +28,8 @@ export async function POST(req: Request, { params }: { params: { courseId: strin
         }
 
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() ?? 'DEFAULT_URL';
-const successUrl = `${baseUrl}/courses/${course.id}/success=1`;
-const cancelUrl = `${baseUrl}/courses/${course.id}/canceled=1`;
+        const successUrl = `${baseUrl}/courses/${course.id}?success=1`;
+        const cancelUrl = `${baseUrl}/courses/${course.id}?canceled=1`;
 
 
         // const successUrl = encodeURI(`${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}/success=1`);
