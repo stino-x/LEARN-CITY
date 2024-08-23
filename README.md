@@ -5,8 +5,7 @@
 --------------------------
 **Check out our TeacherMode feature in action!**
 **[Click here to watch the TeacherMode demo video](https://www.loom.com/share/09a863ce1b8b4126a2deedeee60e9854?sid=ff203731-db05-41ea-ae95-6fb316c39108)**
-**See how educators can easily create and manage courses,**
-**interact with students, and track progress all in one place.**
+
 
 ## Description
 
