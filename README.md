@@ -11,7 +11,10 @@
 
 **Learn City** is a modern online learning platform designed to provide users with access to a wide range of educational courses. The platform integrates **Stripe** for payment processing, enabling users to purchase courses securely. With a focus on a seamless user experience, the platform includes features such as authentication via Clerk, webhook integration for processing payments, and dynamic course pages   .
 
+## Live Demo
 
+**Experience MEET-UP in action!**
+👉 [Click here to try MEET-UP live](https://learn-city.vercel.app/)
 
 ## Features
 
@@ -21,6 +24,7 @@
 - **Dynamic Webhooks**: Stripe webhooks handle the completion of transactions and update the database accordingly.
 - **Custom Success and Cancel Pages**: Redirect users to appropriate pages after successful or failed transactions.
 - **Responsive Design**: Fully responsive and accessible across all devices.
+
 
 ## Technologies Used
 
