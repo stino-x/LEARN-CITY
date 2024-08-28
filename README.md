@@ -6,6 +6,13 @@
 **Check out our TeacherMode feature in action!**
 **[Click here to watch the TeacherMode demo video](https://www.loom.com/share/09a863ce1b8b4126a2deedeee60e9854?sid=ff203731-db05-41ea-ae95-6fb316c39108)**
 
+**IMPORTANT INFO ON PAYMENT SYSTEM (BECAUSE ITS IN TEST MODE ) !!!!!!!!!!!!**
+--------------------------
+**THE CARD NUMBER IS : 4242424242424242(4242 FOUR TIMES) **
+** THE DATE CAN BE ANY DATE LATER THAN THE DAY YOU ARE TRYING TO PAY ON **
+** AND THE CVV OR CCV IS ANY RANDOM NUMBER **
+** EVERYTHING ELSE IS COMPLETELY RANDOM**
+
 
 ## Description
 
