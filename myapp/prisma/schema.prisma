@@ -3,11 +3,10 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -31,7 +30,7 @@ model Course {
   chapters    Chapter[]
 
   @@index([categoryId])
-  @@fulltext([title])
+  // @@fulltext([title])
 }
 
 // Define the Attachment model

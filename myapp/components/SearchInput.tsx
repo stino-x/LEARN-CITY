@@ -29,10 +29,13 @@ const SearchInput: React.FC<SearchInputProps> = ({ }) => {
             url: pathname,
             query: {
                 categoryId: currentCategoryId,
-                title: debouncedValue,
+                // Make sure to format the title correctly for full-text search
+                title: debouncedValue ? debouncedValue.replace(/\s+/g, '&') : null,  // Converts spaces to '&'
             },
         }, { skipNull: true, skipEmptyString: true });
+        
         router.push(url);
+        
     }, [currentCategoryId, debouncedValue, pathname, router]);
 
     // const handleSearch = () => {

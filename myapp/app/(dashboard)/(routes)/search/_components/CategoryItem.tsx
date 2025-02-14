@@ -24,10 +24,11 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ key, label, icon: Icon, val
             url: pathname,
             query: {
                 categoryId: isSelected ? null : value,
-                title: currentTitle
+                title: currentTitle ? currentTitle.replace(/\s+/g, '&') : null,  // Converts spaces to '&' for full-text search
             }
-        }, { skipNull: true, skipEmptyString: true})
-        router.push(url)
+        }, { skipNull: true, skipEmptyString: true });
+        router.push(url);
+        
     }
     return (
         <button className={

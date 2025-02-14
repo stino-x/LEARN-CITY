@@ -16,34 +16,14 @@ type GetCourses = {
 
 export const getCourses = async ({userId, title, categoryId}: GetCourses): Promise<CourseWithProgressWithCategory[]> => {
     try {
-        const courses = await db.course.findMany({
-            where: {
-                isPublished: true,
-                title: {
-                    contains: title
-                },
-                categoryId: categoryId,
-            },
-            include: {
-                category: true,
-                chapters: {
-                    where: {
-                        isPublished: true
-                    },
-                    select: {
-                        id: true
-                    }
-                },
-                purchases: {
-                    where: {
-                        userId
-                    }
-                }
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
+        const courses = await db.$queryRaw`
+  SELECT * FROM "Course"
+  WHERE "isPublished" = true
+  AND to_tsvector('english', title) @@ plainto_tsquery(${title})
+  ${categoryId ? `AND "categoryId" = ${categoryId}` : ''}
+  ORDER BY "createdAt" DESC
+`;
+
 
         const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(courses.map(async (course) => {
             if (course.purchases.length === 0) {
